@@ -2,7 +2,7 @@
 import create from '../../utils/create'
 
 // components/hello/hello.js
-create(Component, {
+create({
   /**
    * 组件的属性列表
    */

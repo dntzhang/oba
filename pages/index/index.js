@@ -3,14 +3,14 @@ import create from '../../utils/create'
 
 const app = getApp()
 
-create(Page, store, {
+create(store, {
 
   bindViewTap: function () {
     wx.navigateTo({
       url: '../logs/logs'
     })
   },
-  
+
   onLoad: function () {
     if (app.globalData.userInfo) {
       this.store.userInfo = app.globalData.userInfo

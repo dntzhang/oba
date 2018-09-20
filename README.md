@@ -1,6 +1,6 @@
 # Westore
 
-> 世界上最小的小程序框架 - [29 行代码](https://github.com/dntzhang/westore/blob/master/utils/create.js)搞定全局状态管理和跨页通讯
+> 世界上最小的小程序框架 - [30 行代码](https://github.com/dntzhang/westore/blob/master/utils/create.js)搞定全局状态管理和跨页通讯
 
 众所周知，小程序通过页面或组件各自的 setData 再加上各种父子、祖孙、姐弟、嫂子与堂兄等等组件间的通讯会把程序搞成一团浆糊。受 [Omi 框架](https://github.com/Tencent/omi) 的启发，所以有了 westore 全局状态管理和跨页通讯框架让一切尽在掌握中。
 
@@ -29,7 +29,7 @@ import create from '../../utils/create'
 
 const app = getApp()
 
-create(Page, store, {
+create(store, {
 
   onLoad: function () {
     if (app.globalData.userInfo) {
@@ -56,7 +56,7 @@ create(Page, store, {
 })
 ```
 
-store 从根节点注入，所有子组件都能通过 this.store 访问。
+创建 Page 只需传入两个参数，store 从根节点注入，所有子组件都能通过 this.store 访问。
 
 ## 更新页面
 
@@ -71,12 +71,12 @@ this.store.update()
 
 import create from '../../utils/create'
 
-create(Component, {
+create({
 
 })
 
 ```
-和创建 Page 不一样的是，创建组件只需传入两个参数，不需要传入 store，因为已经从根节点注入了。
+和创建 Page 不一样的是，创建组件只需传入一个参数，不需要传入 store，因为已经从根节点注入了。
 
 ## 更新组件
 

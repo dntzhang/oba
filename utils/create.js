@@ -1,5 +1,5 @@
-export default function create(ctor, store, option) {
-    if (ctor === Page) {
+export default function create(store, option) {
+    if (arguments.length === 2) {
         option.data = store
         const onLoad = option.onLoad
         option.onLoad = function () {
@@ -11,7 +11,8 @@ export default function create(ctor, store, option) {
             }
             onLoad && onLoad.call(this)
         }
-    } else if (ctor === Component) {
+        Page(option)
+    } else {
         const ready = store.ready
         store.ready = function () {
             this.page = getCurrentPages()[getCurrentPages().length - 1]
@@ -24,6 +25,6 @@ export default function create(ctor, store, option) {
             }
             ready && ready.call(this)
         }
+        Component(store)
     }
-    ctor(option || store)
 }
