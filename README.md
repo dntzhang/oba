@@ -36,7 +36,6 @@ create(Page, store, {
   },
   
   onLoad: function () {
-    this.store.update()
     if (app.globalData.userInfo) {
       this.store.userInfo = app.globalData.userInfo
       this.store.hasUserInfo = true
