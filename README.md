@@ -1,6 +1,6 @@
 # Westore
 
-世界上最小的小程序框架 - 一共 28 行代码搞定全局状态管理
+世界上最小的小程序框架 - [28 行代码](https://github.com/dntzhang/westore/blob/master/utils/create.js)搞定全局状态管理
 
 ## 使用指南
 
