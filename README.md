@@ -41,7 +41,6 @@ create(Page, store, {
       this.store.hasUserInfo = true
       this.store.update()
     } else if (this.data.canIUse) {
-
       app.userInfoReadyCallback = res => {
         this.store.userInfo = res.userInfo
         this.store.hasUserInfo = true
@@ -82,10 +81,6 @@ import create from '../../utils/create'
 
 // components/hello/hello.js
 create(Component, {
-
-  ready: function () {
-
-  }
 
 })
 
