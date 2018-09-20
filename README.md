@@ -53,6 +53,9 @@ create(Page, store, {
   }
 })
 ```
+
+store 从根节点注入，所有子组件都能通过 this.store 访问。
+
 ## 更新页面
 
 ```js
@@ -71,6 +74,7 @@ create(Component, {
 })
 
 ```
+和创建 Page 不一样的是，创建组件只需传入两个参数，不需要传入 store，因为已经从根节点注入了。
 
 ## 更新组件
 
