@@ -1,6 +1,6 @@
 # Westore
 
-世界上最小的小程序框架 - [28 行代码](https://github.com/dntzhang/westore/blob/master/utils/create.js)搞定全局状态管理
+世界上最小的小程序框架 - [29 行代码](https://github.com/dntzhang/westore/blob/master/utils/create.js)搞定全局状态管理
 
 ## 使用指南
 
@@ -97,6 +97,16 @@ create(Component, {
 this.store.any_prop_you_want_to_change = 'any_thing_you_want_change_to'
 this.store.update()
 ```
+
+## 跨页面同步数据
+
+```js
+  onShow:function(){
+    this.store.update()
+  }
+```
+
+在 onShow 的时候更新一下 store 就可以了。
 
 ## License
 MIT @dntzhang

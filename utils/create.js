@@ -4,12 +4,13 @@ export default function create(ctor, store, option) {
         const onLoad = option.onLoad
         option.onLoad = function () {
             this.store = store
+            const preUpdate = this.store.update
             this.store.update = () => {
-                this.setData.call(this, store)
+                this.setData.call(this, this.store)
+                preUpdate && preUpdate()
             }
             onLoad && onLoad.call(this)
         }
-        ctor(option)
     } else if (ctor === Component) {
         const ready = store.ready
         store.ready = function () {
@@ -23,6 +24,6 @@ export default function create(ctor, store, option) {
             }
             ready && ready.call(this)
         }
-        ctor(store)
     }
+    ctor(option || store)
 }
