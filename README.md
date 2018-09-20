@@ -72,7 +72,13 @@ this.store.update()
 import create from '../../utils/create'
 
 create({
+  ready: function () {
+   
+  },
 
+  methods: {
+
+  }
 })
 
 ```
