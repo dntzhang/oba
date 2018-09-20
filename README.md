@@ -4,6 +4,21 @@
 
 ## 使用指南
 
+### 定义全局 store
+
+```js
+export default {
+  motto: 'Hello World',
+  userInfo: {},
+  hasUserInfo: false,
+  canIUse: wx.canIUse('button.open-type.getUserInfo'),
+  logs: [],
+  logMotto:function(){
+    console.log(this.motto)
+  }
+}
+```
+
 ### 创建页面
 
 ```js
