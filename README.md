@@ -79,7 +79,6 @@ this.store.update()
 
 import create from '../../utils/create'
 
-// components/hello/hello.js
 create(Component, {
 
 })
