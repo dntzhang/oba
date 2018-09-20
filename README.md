@@ -29,12 +29,6 @@ const app = getApp()
 
 create(Page, store, {
 
-  bindViewTap: function () {
-    wx.navigateTo({
-      url: '../logs/logs'
-    })
-  },
-  
   onLoad: function () {
     if (app.globalData.userInfo) {
       this.store.userInfo = app.globalData.userInfo
@@ -56,13 +50,6 @@ create(Page, store, {
         }
       })
     }
-  },
-
-  getUserInfo: function (e) {
-    app.globalData.userInfo = e.detail.userInfo
-    this.store.userInfo = e.detail.userInfo
-    this.store.hasUserInfo = true
-    this.store.update()
   }
 })
 ```
