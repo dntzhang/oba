@@ -1,6 +1,6 @@
 # Westore
 
-世界上最小的小程序框架 - [29 行代码](https://github.com/dntzhang/westore/blob/master/utils/create.js)搞定全局状态管理
+世界上最小的小程序框架 - [29 行代码](https://github.com/dntzhang/westore/blob/master/utils/create.js)搞定全局状态管理和跨页通讯
 
 ## 使用指南
 
@@ -41,7 +41,6 @@ create(Page, store, {
       this.store.hasUserInfo = true
       this.store.update()
     } else if (this.data.canIUse) {
-
       app.userInfoReadyCallback = res => {
         this.store.userInfo = res.userInfo
         this.store.hasUserInfo = true
@@ -82,10 +81,6 @@ import create from '../../utils/create'
 
 // components/hello/hello.js
 create(Component, {
-
-  ready: function () {
-
-  }
 
 })
 
