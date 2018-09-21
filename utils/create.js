@@ -28,6 +28,15 @@ export default function create(store, option) {
             this.page = getCurrentPages()[getCurrentPages().length - 1]
             this.store = this.page.store;
             this.setData.call(this, this.store)
+            const preUpdate = this.store.update
+            this.store.update = () => {
+                const result = diff(this.store, originStore)
+                this.setData.call(this, result)
+                preUpdate && preUpdate()
+                for (let key in result) {
+                    updateOriginStore(originStore, key, result[key])
+                }
+            }
             ready && ready.call(this)
         }
         Component(store)
