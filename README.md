@@ -1,6 +1,6 @@
 # Westore
 
-> 世界上最小的小程序框架 - [100 多行代码](https://github.com/dntzhang/westore/blob/master/utils/create.js)搞定全局状态管理和跨页通讯
+> 世界上最小的小程序框架 - [100多行代码](https://github.com/dntzhang/westore/blob/master/utils/create.js)搞定全局状态管理和跨页通讯
 
 众所周知，小程序通过页面或组件各自的 setData 再加上各种父子、祖孙、姐弟、嫂子与堂兄等等组件间的通讯会把程序搞成一团浆糊。受 [Omi 框架](https://github.com/Tencent/omi) 的启发，所以有了 westore 全局状态管理和跨页通讯框架让一切尽在掌握中。
 
