@@ -2,6 +2,7 @@ const ARRAYTYPE = '[object Array]'
 const OBJECTTYPE = '[object Object]'
 const FUNCTIONTYPE = '[object Function]'
 let originStore = null
+let diffResult = null
 
 export default function create(store, option) {
     if (arguments.length === 2) {
@@ -11,12 +12,27 @@ export default function create(store, option) {
         option.onLoad = function () {
             this.store = store
             const preUpdate = this.store.update
-            this.store.update = () => {
-                const result = diff(this.store, originStore)
-                this.setData.call(this, result)
-                preUpdate && preUpdate()
-                for (let key in result) {
-                    updateOriginStore(originStore, key, result[key])
+            if(preUpdate){
+                this.store.update = () => {
+                    if(!diffResult){
+                        diffResult = diff(this.store, originStore)
+                    }
+                    this.setData.call(this, diffResult)
+                    preUpdate()
+                    for (let key in diffResult) {
+                        updateOriginStore(originStore, key, diffResult[key])
+                    }
+                }
+            }else{
+                this.store.update = () => {
+                    if(!diffResult){
+                        diffResult = diff(this.store, originStore)
+                    }
+                    this.setData.call(this, diffResult)
+                    for (let key in diffResult) {
+                        updateOriginStore(originStore, key, diffResult[key])
+                    }
+                    diffResult = null
                 }
             }
             onLoad && onLoad.call(this)
@@ -29,14 +45,30 @@ export default function create(store, option) {
             this.store = this.page.store;
             this.setData.call(this, this.store)
             const preUpdate = this.store.update
-            this.store.update = () => {
-                const result = diff(this.store, originStore)
-                this.setData.call(this, result)
-                preUpdate && preUpdate()
-                for (let key in result) {
-                    updateOriginStore(originStore, key, result[key])
+            if(preUpdate){
+                this.store.update = () => {
+                    if(!diffResult){
+                        diffResult = diff(this.store, originStore)
+                    }
+                    this.setData.call(this, diffResult)
+                    preUpdate()
+                    for (let key in diffResult) {
+                        updateOriginStore(originStore, key, diffResult[key])
+                    }
+                }
+            }else{
+                this.store.update = () => {
+                    if(!diffResult){
+                        diffResult = diff(this.store, originStore)
+                    }
+                    this.setData.call(this, diffResult)
+                    for (let key in diffResult) {
+                        updateOriginStore(originStore, key, diffResult[key])
+                    }
+                    diffResult = null
                 }
             }
+            
             ready && ready.call(this)
         }
         Component(store)
@@ -58,6 +90,7 @@ function updateOriginStore(origin, path, value) {
 }
 
 function diff(current, pre) {
+    console.log(1)
     const result = {}
     _diff(current, pre, '', result)
     return result
