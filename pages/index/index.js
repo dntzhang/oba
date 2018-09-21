@@ -11,6 +11,10 @@ create(store, {
     })
   },
 
+  onShow(){
+    this.store.update()
+  },
+
   onLoad: function () {
     if (app.globalData.userInfo) {
       this.store.userInfo = app.globalData.userInfo
