@@ -90,7 +90,6 @@ function updateOriginStore(origin, path, value) {
 }
 
 function diff(current, pre) {
-    console.log(1)
     const result = {}
     _diff(current, pre, '', result)
     return result
