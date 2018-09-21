@@ -58,14 +58,34 @@ create(store, {
 
 创建 Page 只需传入两个参数，store 从根节点注入，所有子组件都能通过 this.store 访问。
 
-## 更新页面
+### 绑定数据
+
+```html
+<view class="container">
+   
+  <view class="userinfo">
+    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+    <block wx:else>
+      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+    </block>
+  </view>
+  <view class="usermotto">
+    <text class="user-motto">{{motto}}</text>
+  </view>
+
+  <hello></hello>
+</view>
+```
+
+### 更新页面
 
 ```js
 this.store.any_prop_you_want_to_change = 'any_thing_you_want_change_to'
 this.store.update()
 ```
 
-## 创建组件
+### 创建组件
 
 ```js
 
@@ -84,14 +104,14 @@ create({
 ```
 和创建 Page 不一样的是，创建组件只需传入一个参数，不需要传入 store，因为已经从根节点注入了。
 
-## 更新组件
+### 更新组件
 
 ```js
 this.store.any_prop_you_want_to_change = 'any_thing_you_want_change_to'
 this.store.update()
 ```
 
-## 跨页面同步数据
+### 跨页面同步数据
 
 ```js
   onShow:function(){
