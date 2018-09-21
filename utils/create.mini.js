@@ -17,6 +17,11 @@ export default function create(store, option) {
         store.ready = function () {
             this.store = getCurrentPages()[getCurrentPages().length - 1].store;
             this.setData.call(this, this.store)
+            const preUpdate = this.store.update
+            this.store.update = () => {
+                this.setData.call(this, this.store)
+                preUpdate && preUpdate()
+            }
             ready && ready.call(this)
         }
         Component(store)
