@@ -204,7 +204,7 @@ export default {
 }
 ```
 
-当然，也可以不用按照页面拆分文件或模块，这个很自由，视情况而定。
+当然，也可以不用按照页面拆分文件或模块，也可以按照领域来拆分，这个很自由，视情况而定。
 
 ## License
 MIT [@dntzhang](https://github.com/dntzhang)
