@@ -19,7 +19,7 @@ create({
 
   ready: function () {
     setTimeout(() => {
-      this.store.motto = 'Hello Store'
+      this.store.data.motto = 'Hello Store'
       this.store.update()
       this.store.logMotto()
 

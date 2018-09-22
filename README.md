@@ -1,6 +1,6 @@
 # Westore
 
-> 世界上最小的小程序框架 - [100多行代码](https://github.com/dntzhang/westore/blob/master/utils/create.js)搞定全局状态管理和跨页通讯
+> 世界上最小却强大的小程序框架 - [100多行代码](https://github.com/dntzhang/westore/blob/master/utils/create.js)搞定全局状态管理和跨页通讯
 
 众所周知，小程序通过页面或组件各自的 setData 再加上各种父子、祖孙、姐弟、嫂子与堂兄等等组件间的通讯会把程序搞成一团浆糊。受 [Omi 框架](https://github.com/Tencent/omi) 的启发，所以有了 westore 全局状态管理和跨页通讯框架让一切尽在掌握中。
 
@@ -10,13 +10,15 @@
 
 ```js
 export default {
-  motto: 'Hello World',
-  userInfo: {},
-  hasUserInfo: false,
-  canIUse: wx.canIUse('button.open-type.getUserInfo'),
-  logs: [],
-  logMotto:function(){
-    console.log(this.motto)
+  data: {
+    motto: 'Hello World',
+    userInfo: {},
+    hasUserInfo: false,
+    canIUse: wx.canIUse('button.open-type.getUserInfo'),
+    logs: []
+  },
+  logMotto: function () {
+    console.log(this.data.motto)
   }
 }
 ```
@@ -33,26 +35,27 @@ create(store, {
 
   onLoad: function () {
     if (app.globalData.userInfo) {
-      this.store.userInfo = app.globalData.userInfo
-      this.store.hasUserInfo = true
+      this.store.data.userInfo = app.globalData.userInfo
+      this.store.data.hasUserInfo = true
       this.store.update()
     } else if (this.data.canIUse) {
       app.userInfoReadyCallback = res => {
-        this.store.userInfo = res.userInfo
-        this.store.hasUserInfo = true
+        this.store.data.userInfo = res.userInfo
+        this.store.data.hasUserInfo = true
         this.store.update()
       }
     } else {
       wx.getUserInfo({
         success: res => {
           app.globalData.userInfo = res.userInfo
-          this.store.userInfo = res.userInfo
-          this.store.hasUserInfo = true
+          this.store.data.userInfo = res.userInfo
+          this.store.data.hasUserInfo = true
           this.store.update()
         }
       })
     }
   }
+
 })
 ```
 
@@ -78,10 +81,12 @@ create(store, {
 </view>
 ```
 
+和以前的写法没有差别，直接把 `store.data` 作为绑定数据源。 
+
 ### 更新页面
 
 ```js
-this.store.any_prop_you_want_to_change = 'any_thing_you_want_change_to'
+this.store.data.any_prop_you_want_to_change = 'any_thing_you_want_change_to'
 this.store.update()
 ```
 
@@ -93,11 +98,11 @@ import create from '../../utils/create'
 
 create({
   ready: function () {
-   
+   //you can use this.store here
   },
 
   methods: {
-
+    //you can use this.store here
   }
 })
 
@@ -107,7 +112,7 @@ create({
 ### 更新组件
 
 ```js
-this.store.any_prop_you_want_to_change = 'any_thing_you_want_change_to'
+this.store.data.any_prop_you_want_to_change = 'any_thing_you_want_change_to'
 this.store.update()
 ```
 
