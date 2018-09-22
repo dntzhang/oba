@@ -126,5 +126,91 @@ this.store.update()
 
 在 onShow 的时候更新一下 store 就可以了。
 
+### 超大型小程序最佳实践(两种方案)
+
+* 第一种方案，拆分 store 的 date 为不同模块，如:
+
+```js
+export default {
+  data: {
+    commonA: 'a',
+    commonB: 'b',
+    pageA: {
+      a: 1
+      xx: 'xxx'
+    },
+    pageB: {
+      b: 2,
+      c: 3
+    }
+  },
+  xxx: function () {
+    console.log(this.data)
+  }
+}
+```
+
+* 第二种方案，拆分 store 的 data 到不同文件且合并到一个 store 暴露给 create 方法，如：
+
+a.js
+
+```js
+export default {
+  data: {
+    a: 1
+    xx: 'xxx'
+  },
+  aMethod: function (num) {
+    console.log(this.data.a += num)
+  }
+}
+```
+
+b.js
+
+
+```js
+export default {
+  data: {
+    commonA: 'a',
+    commonB: 'b',
+    pageA: {
+      a: 1
+      xx: 'xxx'
+    },
+    pageB: {
+      b: 2,
+      c: 3
+    }
+  },
+  bMethod: function () {
+    console.log(this.data)
+  }
+}
+```
+
+store.js
+
+```js
+import a from 'a.js'
+import b from 'b.js'
+
+export default {
+  data: {
+    commonNum: 1,
+    commonB: 'b',
+    pageA: a.data
+    pageB: b.data
+  },
+  xxx: function () {
+    //you can call the methods of a or b and can pass args to them
+    console.log(a.aMethod(commonNum))
+  },
+  xx: function(){
+
+  }
+}
+```
+
 ## License
 MIT [@dntzhang](https://github.com/dntzhang)
