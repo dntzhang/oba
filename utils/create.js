@@ -1,6 +1,5 @@
-const ARRAYTYPE = '[object Array]'
-const OBJECTTYPE = '[object Object]'
-const FUNCTIONTYPE = '[object Function]'
+import diff from './diff'
+
 let originStore = null
 let diffResult = null
 
@@ -12,9 +11,9 @@ export default function create(store, option) {
         option.onLoad = function () {
             this.store = store
             const preUpdate = this.store.update
-            if(preUpdate){
+            if (preUpdate) {
                 this.store.update = () => {
-                    if(!diffResult){
+                    if (!diffResult) {
                         diffResult = diff(this.store, originStore)
                     }
                     this.setData.call(this, diffResult)
@@ -23,9 +22,9 @@ export default function create(store, option) {
                         updateOriginStore(originStore, key, diffResult[key])
                     }
                 }
-            }else{
+            } else {
                 this.store.update = () => {
-                    if(!diffResult){
+                    if (!diffResult) {
                         diffResult = diff(this.store, originStore)
                     }
                     this.setData.call(this, diffResult)
@@ -45,9 +44,9 @@ export default function create(store, option) {
             this.store = this.page.store;
             this.setData.call(this, this.store)
             const preUpdate = this.store.update
-            if(preUpdate){
+            if (preUpdate) {
                 this.store.update = () => {
-                    if(!diffResult){
+                    if (!diffResult) {
                         diffResult = diff(this.store, originStore)
                     }
                     this.setData.call(this, diffResult)
@@ -56,9 +55,9 @@ export default function create(store, option) {
                         updateOriginStore(originStore, key, diffResult[key])
                     }
                 }
-            }else{
+            } else {
                 this.store.update = () => {
-                    if(!diffResult){
+                    if (!diffResult) {
                         diffResult = diff(this.store, originStore)
                     }
                     this.setData.call(this, diffResult)
@@ -68,7 +67,6 @@ export default function create(store, option) {
                     diffResult = null
                 }
             }
-            
             ready && ready.call(this)
         }
         Component(store)
@@ -76,10 +74,8 @@ export default function create(store, option) {
 }
 
 function updateOriginStore(origin, path, value) {
-
     const arr = path.replace(/\[|(].)/g, '.').split('.')
     let current = origin
-
     for (let i = 0, len = arr.length; i < len; i++) {
         if (i === len - 1) {
             current[arr[i]] = value
@@ -88,79 +84,3 @@ function updateOriginStore(origin, path, value) {
         }
     }
 }
-
-function diff(current, pre) {
-    const result = {}
-    _diff(current, pre, '', result)
-    return result
-}
-
-function _diff(current, pre, path, result) {
-    if (current === pre) return
-    const rootCurrentType = type(current)
-    const rootPreType = type(pre)
-    if (rootCurrentType == OBJECTTYPE) {
-        if (rootPreType != OBJECTTYPE) {
-            setResult(result, path, current)
-        } else {
-            for (let key in current) {
-                const currentValue = current[key]
-                const preValue = pre[key]
-                const currentType = type(currentValue)
-                const preType = type(preValue)
-                if (currentType != ARRAYTYPE && currentType != OBJECTTYPE) {
-                    if (currentValue != pre[key]) {
-                        setResult(result, (path == '' ? '' : path + ".") + key, currentValue)
-                    }
-                } else if (currentType == ARRAYTYPE) {
-                    if (preType != ARRAYTYPE) {
-                        setResult(result, (path == '' ? '' : path + ".") + key, currentValue)
-                    } else {
-                        //diff array
-                        currentValue.forEach((item, index) => {
-                            _diff(item, preValue[index], (path == '' ? '' : path + ".") + key + '[' + index + ']', result)
-                        })
-                    }
-                } else if (currentType == OBJECTTYPE) {
-                    if (preType != OBJECTTYPE) {
-                        setResult(result, (path == '' ? '' : path + ".") + key, currentValue)
-                    } else {
-                        //diff obj
-                        for (let subKey in currentValue) {
-                            _diff(currentValue[subKey], preValue[subKey], (path == '' ? '' : path + ".") + key + '.' + subKey, result)
-                        }
-                    }
-                }
-
-            }
-        }
-    } else if (rootCurrentType == ARRAYTYPE) {
-        if (rootPreType != ARRAYTYPE) {
-            setResult(result, path, current)
-        } else {
-            //diff array
-            current.forEach((item, index) => {
-                _diff(item, pre[index], path + '[' + index + ']', result)
-            })
-        }
-    } else {
-        setResult(result, path, current)
-    }
-}
-
-function setResult(result, k, v) {
-    if (type(v) != FUNCTIONTYPE) {
-        result[k] = v
-    }
-}
-
-function type(obj) {
-    return Object.prototype.toString.call(obj)
-}
-
-// console.log(JSON.stringify(diff({
-//     a: 1, b: 2, c: "str", d: { e: [2, { a: 4 }, 5] }, f: true
-// }, {
-//         a: [], b: "aa", c: 3, d: { e: [3, { a: 3 }] }, f: false
-//     })))
-//{"a":1,"b":2,"c":"str","d.e[0]":2,"d.e[1].a":4,"d.e[2]":5,"f":true}
