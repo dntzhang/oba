@@ -122,4 +122,4 @@ this.store.update()
 在 onShow 的时候更新一下 store 就可以了。
 
 ## License
-MIT @dntzhang
+MIT [@dntzhang](https://github.com/dntzhang)
