@@ -161,7 +161,7 @@ export default {
     xx: 'xxx'
   },
   aMethod: function (num) {
-    console.log(this.data.a += num)
+    this.data.a += num
   }
 }
 ```
@@ -172,19 +172,11 @@ b.js
 ```js
 export default {
   data: {
-    commonA: 'a',
-    commonB: 'b',
-    pageA: {
-      a: 1
-      xx: 'xxx'
-    },
-    pageB: {
-      b: 2,
-      c: 3
-    }
+    b: 2,
+    c: 3
   },
   bMethod: function () {
-    console.log(this.data)
+    
   }
 }
 ```
