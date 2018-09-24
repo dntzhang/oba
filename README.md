@@ -249,6 +249,19 @@ Diff 的结果是:
 
 ![diff](./asset/diff.jpg)
 
+Diff 原理:
+
+* 同步所有 key 到当前 store.data
+* 携带 path 和 result 递归遍历对比所有 key value
+
+```
+export default function diff(current, pre) {
+    const result = {}
+    syncKeys(current, pre)
+    _diff(current, pre, '', result)
+    return result
+}
+```
 未完待续...
 
 ### 小程序 setData
