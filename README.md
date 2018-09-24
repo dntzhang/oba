@@ -9,7 +9,7 @@
 * 超小的代码尺寸
 * 高性能长列表显示和加载
 * 和 Omi 同样简洁的 Store API
-* 没有使用 Object.defineProperty 且重写数组所有方法的黑魔法，浪费内存不说且不是标准
+* 没有使用 Object.defineProperty 且重写数组所有方法的黑魔法，浪费内存且不是标准
 
 ---
 
