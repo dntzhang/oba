@@ -6,6 +6,22 @@
 
 受 [Omi 框架](https://github.com/Tencent/omi) 的启发，所以有了 westore 全局状态管理和跨页通讯框架让一切尽在掌握中。
 
+---
+
+- [使用指南](#使用指南)
+	- [定义全局 store](#定义全局-store)
+  - [创建页面](#创建页面)
+	- [绑定数据](#绑定数据)
+	- [更新页面](#更新页面)
+  - [创建组件](#创建组件)
+  - [更新组件](#更新组件)
+  - [跨页面同步数据](#跨页面同步数据)
+  - [超大型小程序最佳实践(两种方案)](#超大型小程序最佳实践(两种方案))
+- [原理](#原理)
+  - [JSON Diff](#json-diff)
+  - [Store Update 链](#store-update-链)
+- [License](#license)
+
 ## 使用指南
 
 ### 定义全局 store
@@ -207,6 +223,14 @@ export default {
 ```
 
 当然，也可以不用按照页面拆分文件或模块，也可以按照领域来拆分，这个很自由，视情况而定。
+
+## 原理
+
+### JSON Diff
+
+### Store Update 链
+
+马上更新...
 
 ## License
 MIT [@dntzhang](https://github.com/dntzhang)
