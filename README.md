@@ -9,7 +9,7 @@
 * 超小的代码尺寸
 * 比原生 setData 更优秀的性能
 * 和 Omi 同样简洁的 Store API
-* 尊重且顺从小程序的设计(其他转译库相当于反其道行之)
+* 尊重且顺从小程序的设计(其他转译库相当于反其道行)
 * 没有使用 Object.defineProperty 且重写数组所有方法的黑魔法(array.length变更也无解)，既浪费内存且不是标准
 
 ---
@@ -143,11 +143,15 @@ this.store.update()
 
 ### 跨页面同步数据
 
+在 A页面改完 store，要更新 B 页面。 只需在 B页面 onShow 中执行 update 便可：
+
 ```js
-this.store.update()
+onShow: function(){
+  this.store.update()
+}
 ```
 
-使用 westore 跨页通讯非常方便，任意页面改完 store 的 data 之后，在任意页面执行 update 方法就可以了。store.update 链会更新所有看得到和看不到的页面。所以你不用刻意去跨页同步数据，只需要关注数据本身便可以。
+其实如果 B 页面的 update 链 A 页面 update 链中，连上面的代码都不需要写，自动后台就同步更新了。什么是 update 链可以看下面的原理部分。
 
 ### 超大型小程序最佳实践(两种方案)
 
