@@ -81,7 +81,7 @@ create(store, {
 
 ### 绑定数据
 
-```html
+```jsx
 <view class="container">
    
   <view class="userinfo">
