@@ -32,7 +32,7 @@
 
 ## API
 
-Westore API 只有三个:
+Westore API 只有三个, 大道至简:
 
 * create(store, option) 创建页面
 * create(option)        创建组件
