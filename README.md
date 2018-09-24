@@ -6,10 +6,10 @@
 
 受 [Omi 框架](https://github.com/Tencent/omi) 的启发，且专门为小程序开发的 [JSON Diff 库](https://github.com/dntzhang/westore/blob/master/utils/diff.js)，所以有了 westore 全局状态管理和跨页通讯框架让一切尽在掌握中，且受高性能 JSON Diff 库的利好，长列表滚动加载显示变得轻松可驾驭。总结下来有如下特性和优势:
 
-* 超小的代码尺寸
-* 比原生 setData 更优秀的性能
 * 和 Omi 同样简洁的 Store API
+* 超小的代码尺寸(包括 json diff 共100多行)
 * 尊重且顺从小程序的设计(其他转译库相当于反其道行)
+* this.store.update 比原生 setData 的性能更优
 * 没有使用 Object.defineProperty 且重写数组所有方法的黑魔法(array.length变更也无解)，既浪费内存且不是标准
 
 ---
