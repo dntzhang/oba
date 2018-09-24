@@ -237,6 +237,21 @@ export default {
 
 ## 原理
 
+ ---------------       -------------------        -----------------------
+| store.update  |  →  |     json diff     |   →  | setData()-setData()...|
+ ---------------       -------------------        -----------------------
+
+虽然和 Omi 一样同为 store.updata 但是却有着本质的区别。Omi 的如下:
+
+ ---------------       -------------------        ----------------         ------------------------------
+| store.update  |  →  |     setState      |   →  |  jsx rerender  |   →   |   vdom diff → apply diff...  |
+ ---------------       -------------------        ----------------         ------------------------------
+
+都是数据驱动视图，但本质不同，原因:
+
+* 小程序 store 和 dom 不在同一个环境，先在 js 环境进行 json diff，然后使用 diff 结果通过 setData 通讯
+* web 里使用 omi 的话 store 和 dom 在同一环境，setState 直接驱动的 vdom diff 然后把 diff 结果作用在真是 dom 上
+
 ### JSON Diff
 
 先看一下我为 westore 专门定制开发的 [JSON Diff 库](https://github.com/dntzhang/westore/blob/master/utils/diff.js) 的能力:
