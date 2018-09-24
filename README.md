@@ -239,7 +239,7 @@ export default {
 
 ```
  ---------------       -------------------        -----------------------
-| store.update  |  →  |     json diff     |   →  | setData()-setData()...|
+| store.update  |  →  |     json diff     |   →  | setData()-setData()...|  →  之后就是黑盒(小程序官方实现，但是 dom/apply diff 肯定是少不了)
  ---------------       -------------------        -----------------------
 ```
 
