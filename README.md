@@ -226,7 +226,7 @@ export default {
 
 ### JSON Diff
 
-先看一下我为 westore 专门定制开发的 JSON Diff 库的能力:
+先看一下我为 westore 专门定制开发的 [JSON Diff 库](https://github.com/dntzhang/westore/blob/master/utils/diff.js) 的能力:
 
 ``` js
 diff({
