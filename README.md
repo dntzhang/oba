@@ -262,7 +262,7 @@ Diff 原理:
 * 同步所有 key 到当前 store.data
 * 携带 path 和 result 递归遍历对比所有 key value
 
-```
+``` js
 export default function diff(current, pre) {
     const result = {}
     syncKeys(current, pre)
@@ -270,6 +270,8 @@ export default function diff(current, pre) {
     return result
 }
 ```
+
+同步上一轮 state.data 的 key 主要是为了检测 array 中删除的元素或者 obj 中删除的 key。
 
 ### 小程序 setData
 
