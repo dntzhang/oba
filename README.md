@@ -137,12 +137,10 @@ this.store.update()
 ### 跨页面同步数据
 
 ```js
-  onShow:function(){
-    this.store.update()
-  }
+this.store.update()
 ```
 
-在 onShow 的时候更新一下 store 就可以了。
+使用 westore 跨页通讯非常方便，改变完 store 的 data 之后，在任意页面执行 update 方法就可以了。
 
 ### 超大型小程序最佳实践(两种方案)
 
@@ -238,13 +236,27 @@ diff({
 })
 ```
 
-输入的结果是:
+Diff 的结果是:
 
 ``` js
-{ "a": 1, "b": 2, "c": "str", "d.e[0]": 2, "d.e[1].a": 4, "d.e[2]": 5, "f": true, "h": [1], "g.a": [1, 2], "g.j": 111 }
+{ "a": 1, "b": 2, "c": "str", "d.e[0]": 2, "d.e[1].a": 4, "d.e[2]": 5, "f": true, "h": [1], "g.a": [1, 2], "g.j": 111, "g.i": null, "k": null }
 ```
 
 未完待续...
+
+### 小程序 setData
+
+setData 函数用于将数据从逻辑层发送到视图层（异步），同时改变对应的 this.data 的值（同步）。
+
+其中 key 可以以数据路径的形式给出，支持改变数组中的某一项或对象的某个属性，如 array[2].message，a.b.c.d，并且不需要在 this.data 中预先定义。比如：
+
+```js
+this.setData({
+      'array[0].text':'changed data'
+})
+```
+
+所以 diff 的结果可以直接传递给 `setData`，也就是 `this.store.update`。
 
 ### Store Update 链
 
