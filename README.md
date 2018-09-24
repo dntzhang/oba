@@ -14,6 +14,7 @@
 
 ---
 
+- [API][#api]
 - [使用指南](#使用指南)
 	- [定义全局 store](#定义全局-store)
   - [创建页面](#创建页面)
@@ -28,6 +29,14 @@
   - [Store Update 链](#store-update-链)
   - [setData 和 store.update 对比](#setdata-和-storeupdate-对比)
 - [License](#license)
+
+## API
+
+Westore API 只有三个:
+
+* create(store, option) 创建页面
+* create(option)        创建组件
+* this.store.update()   更新 store, 刷新页面
 
 ## 使用指南
 
