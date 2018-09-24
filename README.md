@@ -228,6 +228,24 @@ export default {
 
 ### JSON Diff
 
+先看一下我为 westore 专门定制开发的 JSON Diff 库的能力:
+
+``` js
+diff({
+    a: 1, b: 2, c: "str", d: { e: [2, { a: 4 }, 5] }, f: true, h: [1], g: { a: [1, 2], j: 111 }
+}, {
+    a: [], b: "aa", c: 3, d: { e: [3, { a: 3 }] }, f: false, h: [1, 2], g: { a: [1, 1, 1], i: "delete" }, k: 'del'
+})
+```
+
+输入的结果是:
+
+``` js
+{ "a": 1, "b": 2, "c": "str", "d.e[0]": 2, "d.e[1].a": 4, "d.e[2]": 5, "f": true, "h": [1], "g.a": [1, 2], "g.j": 111 }
+```
+
+未完待续...
+
 ### Store Update 链
 
 马上更新...
