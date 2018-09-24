@@ -11,17 +11,21 @@ create(store, {
     })
   },
 
+  onShow(){
+    this.update()
+  },
+
   onLoad: function () {
     if (app.globalData.userInfo) {
       this.store.data.userInfo = app.globalData.userInfo
       this.store.data.hasUserInfo = true
-      this.store.update()
+      this.update()
     } else if (this.data.canIUse) {
 
       app.userInfoReadyCallback = res => {
         this.store.data.userInfo = res.userInfo
         this.store.data.hasUserInfo = true
-        this.store.update()
+        this.update()
       }
     } else {
       wx.getUserInfo({
@@ -29,16 +33,24 @@ create(store, {
           app.globalData.userInfo = res.userInfo
           this.store.data.userInfo = res.userInfo
           this.store.data.hasUserInfo = true
-          this.store.update()
+          this.update()
         }
       })
     }
+
+    setTimeout(() => {
+      //怎么更新子组件？
+      this.store.data.motto = 'Hello Store222'
+      this.update()
+
+    }, 4000)
+
   },
 
   getUserInfo: function (e) {
     app.globalData.userInfo = e.detail.userInfo
     this.store.data.userInfo = e.detail.userInfo
     this.store.data.hasUserInfo = true
-    this.store.update()
+    this.update()
   }
 })

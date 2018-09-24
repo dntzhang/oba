@@ -1,16 +1,21 @@
 import diff from './diff'
 
 let originData = null
-let diffResult = null
 
 export default function create(store, option) {
     if (arguments.length === 2) {
-        if (!originData) originData = JSON.parse(JSON.stringify(store.data))
+        if (!originData) {
+            originData = JSON.parse(JSON.stringify(store.data))
+            store.instances = {}
+        }
+        getApp().globalData.store = store
         option.data = store.data
         const onLoad = option.onLoad
         option.onLoad = function () {
             this.store = store
             rewriteUpdate(this)
+            store.instances[this.route] = []
+            store.instances[this.route].push(this)
             onLoad && onLoad.call(this)
         }
         Page(option)
@@ -21,6 +26,7 @@ export default function create(store, option) {
             this.store = this.page.store;
             this.setData.call(this, this.store.data)
             rewriteUpdate(this)
+            this.store.instances[this.page.route].push(this)
             ready && ready.call(this)
         }
         Component(store)
@@ -28,28 +34,16 @@ export default function create(store, option) {
 }
 
 function rewriteUpdate(ctx){
-    const preUpdate = ctx.store.update
-    if (preUpdate) {
-        ctx.store.update = () => {
-            if (!diffResult) {
-                diffResult = diff(ctx.store.data, originData)
-            }
-            ctx.setData.call(ctx, diffResult)
-            preUpdate()
-            for (let key in diffResult) {
-                updateOriginData(originData, key, diffResult[key])
-            }
+    ctx.update = () => {
+        const diffResult = diff(ctx.store.data, originData)  
+        //优化数据和组件关联定向更新
+        for(let key in ctx.store.instances){
+            ctx.store.instances[key].forEach(ins => {
+                ins.setData.call(ins, diffResult)
+            })
         }
-    } else {
-        ctx.store.update = () => {
-            if (!diffResult) {
-                diffResult = diff(ctx.store.data, originData)
-            }
-            ctx.setData.call(ctx, diffResult)
-            for (let key in diffResult) {
-                updateOriginData(originData, key, diffResult[key])
-            }
-            diffResult = null
+        for (let key in diffResult) {
+            updateOriginData(originData, key, diffResult[key])
         }
     }
 }

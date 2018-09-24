@@ -10,6 +10,7 @@ create(store, {
     this.store.data.logs = (wx.getStorageSync('logs') || []).map(log => {
       return util.formatTime(new Date(log))
     })
-    this.store.update()
+    this.store.data.motto = 'Math.random:' + Math.random()
+    this.update()
   }
 })

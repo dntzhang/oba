@@ -9,8 +9,7 @@
 * 和 Omi 同样简洁的 Store API
 * 超小的代码尺寸(包括 json diff 共100多行)
 * 尊重且顺从小程序的设计(其他转译库相当于反其道行)
-* this.store.update 比原生 setData 的性能更优
-* 没有使用 Object.defineProperty 且重写数组所有方法的黑魔法(array.length变更也无解)，既浪费内存且不是标准
+* this.update 比原生 setData 的性能更优，更加智能
 
 ---
 
@@ -22,12 +21,13 @@
   - [更新页面](#更新页面)
   - [创建组件](#创建组件)
   - [更新组件](#更新组件)
+  - [setData 和 update 对比](#setdata-和-update-对比)
   - [跨页面同步数据](#跨页面同步数据)
+  - [调试](#调试)
   - [超大型小程序最佳实践](#超大型小程序最佳实践两种方案)
 - [原理](#原理)
   - [JSON Diff](#json-diff)
   - [Store Update 链](#store-update-链)
-  - [setData 和 store.update 对比](#setdata-和-storeupdate-对比)
 - [License](#license)
 
 ## API
@@ -36,7 +36,7 @@ Westore API 只有三个, 大道至简:
 
 * create(store, option) 创建页面
 * create(option)        创建组件
-* this.store.update()   更新 store, 刷新页面
+* this.update()   更新页面或组件
 
 ## 使用指南
 
@@ -71,12 +71,12 @@ create(store, {
     if (app.globalData.userInfo) {
       this.store.data.userInfo = app.globalData.userInfo
       this.store.data.hasUserInfo = true
-      this.store.update()
+      this.update()
     } else if (this.data.canIUse) {
       app.userInfoReadyCallback = res => {
         this.store.data.userInfo = res.userInfo
         this.store.data.hasUserInfo = true
-        this.store.update()
+        this.update()
       }
     } else {
       wx.getUserInfo({
@@ -84,7 +84,7 @@ create(store, {
           app.globalData.userInfo = res.userInfo
           this.store.data.userInfo = res.userInfo
           this.store.data.hasUserInfo = true
-          this.store.update()
+          this.update()
         }
       })
     }
@@ -121,7 +121,7 @@ create(store, {
 
 ```js
 this.store.data.any_prop_you_want_to_change = 'any_thing_you_want_change_to'
-this.store.update()
+this.update()
 ```
 
 ### 创建组件
@@ -147,8 +147,31 @@ create({
 
 ```js
 this.store.data.any_prop_you_want_to_change = 'any_thing_you_want_change_to'
-this.store.update()
+this.update()
 ```
+
+### setData 和 update 对比
+
+拿官方模板示例的 log 页面作为例子:
+
+```js
+this.setData({
+  logs: (wx.getStorageSync('logs') || []).map(log => {
+    return util.formatTime(new Date(log))
+  })
+})
+```
+
+使用 westore 后:
+
+``` js
+this.store.data.logs = (wx.getStorageSync('logs') || []).map(log => {
+  return util.formatTime(new Date(log))
+})
+this.update()
+```
+
+看似一条语句变成了两条语句，但是 this.update 调用的 setData 是 diff 后的，所以传递的数据更少。
 
 ### 跨页面同步数据
 
@@ -156,11 +179,17 @@ this.store.update()
 
 ```js
 onShow: function(){
-  this.store.update()
+  this.update()
 }
 ```
 
 其实如果 B 页面的 update 链 A 页面 update 链中，连上面的代码都不需要写，自动后台就同步更新了。什么是 update 链可以看下面的原理部分。
+
+### 调试
+
+```js
+console.log(getApp().globalData.store.data)
+```
 
 ### 超大型小程序最佳实践(两种方案)
 
@@ -248,7 +277,7 @@ export default {
 
 ```
  ---------------       -------------------        -----------------------
-| store.update  |  →  |     json diff     |   →  | setData()-setData()...|  →  之后就是黑盒(小程序官方实现，但是 dom/apply diff 肯定是少不了)
+| this.update  |  →  |     json diff     |   →  | setData()-setData()...|  →  之后就是黑盒(小程序官方实现，但是 dom/apply diff 肯定是少不了)
  ---------------       -------------------        -----------------------
 ```
 
@@ -256,7 +285,7 @@ export default {
 
 ```
  ---------------       -------------------        ----------------         ------------------------------
-| store.update  |  →  |     setState      |   →  |  jsx rerender  |   →   |   vdom diff → apply diff...  |
+|  this.update  |  →  |     setState      |   →  |  jsx rerender  |   →   |   vdom diff → apply diff...  |
  ---------------       -------------------        ----------------         ------------------------------
 ```
 
@@ -313,7 +342,7 @@ this.setData({
 })
 ```
 
-所以 diff 的结果可以直接传递给 `setData`，也就是 `this.store.update`。
+所以 diff 的结果可以直接传递给 `setData`，也就是 `this.update`。
 
 #### setData 工作原理
 
@@ -327,18 +356,19 @@ this.setData({
 * 每次 setData 都传递大量新数据
 * 后台态页面进行 setData
 
-上面是官方截取的内容。this.store.update 本质是先 diff，再执行一连串的 setData。所以这里第一点和第二点都自然规避。但是第三点 westore 没有遵循，跨页面通讯很可能会在后台页面进行 update 进而 setData，但是由于 diff 的存在不会发现有性能的问题。
+上面是官方截取的内容。使用 webstore 的 this.update 本质是先 diff，再执行一连串的 setData，所以可以保证传递的数据每次维持在最小。既然可以使得传递数据最小，所以第一点和第三点虽有违反但可以商榷。
 
-### Store Update 链
+### Store Update 
 
-这里区分在页面中的 update 和 组件中的 update。页面中的 update 在 onLoad 事件中进行挂载和链接。
+这里区分在页面中的 update 和 组件中的 update。页面中的 update 在 onLoad 事件中进行实例收集。
 
 ```js
-option.data = store.data
 const onLoad = option.onLoad
 option.onLoad = function () {
     this.store = store
     rewriteUpdate(this)
+    store.instances[this.route] = []
+    store.instances[this.route].push(this)
     onLoad && onLoad.call(this)
 }
 Page(option)
@@ -353,66 +383,29 @@ store.ready = function () {
     this.store = this.page.store;
     this.setData.call(this, this.store.data)
     rewriteUpdate(this)
+    this.store.instances[this.page.route].push(this)
     ready && ready.call(this)
 }
 Component(store)
 ```
 
-可以看到组件需要从页面栈中拿到 store，因为 store 是从 page 中注入了，所以只能这样获取。
-
 rewriteUpdate 的实现如下:
 
 ``` js
 function rewriteUpdate(ctx){
-    const preUpdate = ctx.store.update
-    if (preUpdate) {
-        ctx.store.update = () => {
-            if (!diffResult) {
-                diffResult = diff(ctx.store.data, originData)
-            }
-            ctx.setData.call(ctx, diffResult)
-            preUpdate()
-            for (let key in diffResult) {
-                updateOriginData(originData, key, diffResult[key])
-            }
+    ctx.update = () => {
+        const diffResult = diff(ctx.store.data, originData)  
+        for(let key in ctx.store.instances){
+            ctx.store.instances[key].forEach(ins => {
+                ins.setData.call(ins, diffResult)
+            })
         }
-    } else {
-        ctx.store.update = () => {
-            if (!diffResult) {
-                diffResult = diff(ctx.store.data, originData)
-            }
-            ctx.setData.call(ctx, diffResult)
-            for (let key in diffResult) {
-                updateOriginData(originData, key, diffResult[key])
-            }
-            diffResult = null
+        for (let key in diffResult) {
+            updateOriginData(originData, key, diffResult[key])
         }
     }
 }
 ```
-
-### setData 和 store.update 对比
-
-拿官方模板示例的 log 页面作为例子:
-
-```js
-this.setData({
-  logs: (wx.getStorageSync('logs') || []).map(log => {
-    return util.formatTime(new Date(log))
-  })
-})
-```
-
-使用 westore 后:
-
-``` js
-this.store.data.logs = (wx.getStorageSync('logs') || []).map(log => {
-  return util.formatTime(new Date(log))
-})
-this.store.update()
-```
-
-看似一条语句变成了两条语句，但是 store.update 调用的 setData 是 diff 后的，所以传递的数据更少。
 
 ## License
 MIT [@dntzhang](https://github.com/dntzhang)
